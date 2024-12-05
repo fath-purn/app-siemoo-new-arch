@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HelloWorld",
-    "slug": "expo-template-default",
+    "name": "app-siemoo-new-arch",
+    "slug": "app-siemoo-new-arch",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,13 +9,15 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fathpurn.appsiemoonewarch"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.fathpurn.appsiemoonewarch"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +38,18 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ccf427e3-bafd-4c9a-b8e2-4d8e243e47ae"
+      }
+    },
+    "owner": "fathpurn",
+    "updates": {
+      "url": "https://u.expo.dev/ccf427e3-bafd-4c9a-b8e2-4d8e243e47ae"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
