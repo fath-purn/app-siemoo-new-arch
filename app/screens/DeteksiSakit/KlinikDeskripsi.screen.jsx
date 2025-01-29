@@ -1,0 +1,171 @@
+import React, { useState } from "react";
+import {
+  View,
+  ScrollView,
+  SafeAreaView,
+  Image,
+  Text,
+  Linking,
+  ActivityIndicator,
+  TextInput,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import TopTitleMenu from "../../components/TopTitleMenu";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Dropdown } from "react-native-element-dropdown";
+import { styles, extractUrlFromIntent } from "../../utils/global.utils";
+import clsx from "clsx";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import SakitKlinikLengkap from "../../components/SakitKlinikLengkap";
+import { useRoute } from "@react-navigation/native";
+import { WebView } from "react-native-webview";
+
+const fetchData = async (value, id) => {
+  const headers = {
+    Authorization: `Bearer ${value}`,
+  };
+
+  const response = await axios.get(
+    `https://siemoo.vercel.app/api/v1/klinik/${id}`,
+    { headers }
+  );
+
+  return response.data.data;
+};
+
+export default KlinikDeskripsi = () => {
+  const insets = useSafeAreaInsets();
+  const [webViewKey, setWebViewKey] = useState(0);
+  const route = useRoute();
+  const { id } = route.params;
+
+  const {data, isLoading, isError, error} = useQuery(
+    `klinikDeskripsi`,
+    async () => {
+      const value = await AsyncStorage.getItem('@data/user');
+      const responseData = await fetchData(value, id);
+
+      return responseData;
+    },
+  );
+
+
+  if (isLoading) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <ActivityIndicator size={80} color="#609966" />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  const openRute = (err) => {
+    const url = extractUrlFromIntent(err.nativeEvent.url);
+    setWebViewKey(webViewKey + 1);
+    Linking.openURL(url);
+  };
+
+  return (
+    <SafeAreaView
+      style={{
+        // Paddings to handle safe area
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      }}
+      className="flex-[1] items-center bg-[#EDF1D6] h-screen"
+    >
+      <View className="w-[95%] mt-10">
+        <TopTitleMenu title={data.nama} />
+
+        <ScrollView className="flex-auto h-[80%]">
+          <View
+            style={[styles.shadow]}
+            className="w-full aspect-square rounded-lg"
+          >
+            <Image
+              source={{ uri: data.media }}
+              // style={{ width: 300, height: 300 }}
+              className="w-full aspect-square rounded-lg"
+              style={[styles.shadow]}
+            />
+          </View>
+
+          <View className="mt-5">
+            <Text className="text-2xl font-semibold leading-7 tracking-wide text-[#40513B] mb-1">
+              Alamat
+            </Text>
+            <View
+              className="rounded-lg w-full h-[300px] mb-5 bg-black"
+              style={[styles.shadow]}
+            >
+              <WebView
+                key={webViewKey}
+                originWhitelist={["*"]}
+                source={{
+                  uri: data.maps,
+                }}
+                onError={openRute}
+                onHttpError={({ nativeEvent }) => {
+                  openRute(nativeEvent);
+                }}
+              />
+            </View>
+
+            <View className="flex-row mt-5">
+              <MaterialCommunityIcons
+                name={"map-marker-outline"}
+                size={35}
+                color="#166534"
+              />
+              <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B] mb-1">
+                {data.alamat}
+              </Text>
+            </View>
+            <View className="flex-row mt-3 items-center">
+              <MaterialCommunityIcons
+                name={"phone"}
+                size={35}
+                color="#166534"
+              />
+              <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B] mb-1">
+                {data.telepon}
+              </Text>
+            </View>
+            <View className="flex-row mt-3">
+              <MaterialCommunityIcons
+                name={"clock-outline"}
+                size={35}
+                color="#166534"
+              />
+              <View className="ml-1">
+                <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B]">
+                  Senin - Sabtu {data.jadwal.seninSabtu} WIB
+                </Text>
+                <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B] mb-1">
+                  Minggu {data.jadwal.seninSabtu} WIB
+                </Text>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
+};
