@@ -1,33 +1,19 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import React, { useState } from "react";
 import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Image,
-  Text,
-  Linking,
   ActivityIndicator,
-  TextInput,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import TopTitleMenu from "../../components/TopTitleMenu";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "react-query";
-import axios from "axios";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Dropdown } from "react-native-element-dropdown";
-import { styles, extractUrlFromIntent } from "../../utils/global.utils";
-import clsx from "clsx";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import SakitKlinikLengkap from "../../components/SakitKlinikLengkap";
-import { WebView } from "react-native-webview";
 import SakitBanner from "../../components/SakitBanner";
 import SakitUpload from "../../components/SakitUpload";
+import TopTitleMenu from "../../components/TopTitleMenu";
 
 const fetchData = async (value) => {
   const headers = {
@@ -44,8 +30,9 @@ const fetchData = async (value) => {
 
 export default Riwayat = () => {
   const insets = useSafeAreaInsets();
+  const [refreshing, setRefreshing] = useState(false);
 
-    const {data, isLoading, isError, error} = useQuery(
+    const {data, isLoading, isError, error, refetch} = useQuery(
       'riwayatSakit',
       async () => {
         const value = await AsyncStorage.getItem('@data/user');
@@ -55,8 +42,17 @@ export default Riwayat = () => {
       },
     );
 
-    if (isLoading) {
-      return (
+  const onRefresh = React.useCallback(async () => { 
+    setRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetch]);
+
+  if (isLoading) {
+    return (
         <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
           <ActivityIndicator size={80} color="#609966" />
         </View>
@@ -88,10 +84,20 @@ export default Riwayat = () => {
         {/* Upload Gambar */}
         <SakitUpload />
 
-        <ScrollView className="flex-auto h-[80%]">
+        <ScrollView 
+          className="h-[80%] flex-auto"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#609966"]}
+              tintColor="#609966"
+            />
+          }
+        >
           {data &&
             data.map((data, index) => {
-              return <SakitBanner sakit={data} index={index} />;
+              return <SakitBanner key={index} sakit={data} index={index} />;
             })}
         <View className="pb-[100px]"></View>
         </ScrollView>

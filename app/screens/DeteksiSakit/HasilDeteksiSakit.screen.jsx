@@ -1,41 +1,36 @@
-import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
+import * as Location from "expo-location";
+import React, { useState } from "react";
 import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Text,
+  ActivityIndicator,
   Dimensions,
   Image,
   Linking,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
   TouchableWithoutFeedback,
-  ActivityIndicator,
+  View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import TopTitleMenu from "../../components/TopTitleMenu";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useQuery } from "react-query";
-import axios from "axios";
-import * as Location from "expo-location";
-import ErrorHandler from "../../components/ErrorHandler";
-// import { Line } from 'react-native-svg';
-import Svg, { Circle, Rect } from "react-native-svg";
-import { Line } from "react-native-svg/src";
 import { Bar } from "react-native-progress";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useQuery } from "react-query";
+import SakitKlinikLengkap from "../../components/SakitKlinikLengkap";
+import TopTitleMenu from "../../components/TopTitleMenu";
 import {
   extractUrlFromIntent,
   getDangerColor,
   styles,
 } from "../../utils/global.utils";
-import SakitKlinikLengkap from "../../components/SakitKlinikLengkap";
-import { useNavigation, useRoute } from "@react-navigation/native";
 
 const fetchData = async (value, id) => {
   const headers = {
     Authorization: `Bearer ${value}`,
   };
-
   const response = await axios.get(`https://siemoo.vercel.app/api/v1/deteksi/${id}`, {
     headers,
   });
@@ -43,145 +38,85 @@ const fetchData = async (value, id) => {
   return response.data.data;
 };
 
-export default HasilDeteksiSakit = (props) => {
+const HasilDeteksiSakit = (props) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute();
   const { id } = route.params;
-  const [progress, setProgress] = useState(0); // Start progress from 0
-  const [targetProgress, setTargetProgress] = useState(100); // Target progress value
   const screenWidth = Dimensions.get("window").width;
   const [dangerLevel, setDangerLevel] = useState(2);
-  const [photo, setPhoto] = useState("https://reactjs.org/logo-og.png");
-  const [latitude, setLatitude] = useState(-7.5824467);
-  const [longitude, setLongtitude] = useState(109.2537889);
-  const [webViewKey, setWebViewKey] = useState(0);
-  const [displayedAccuracy, setDisplayedAccuracy] = useState(0);
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const handlerNavigate = () => {
-    navigation.navigate("KlinikList-screen");
-  };
-
-  const { data, isLoading, isError, error } = useQuery(
+  const { data, isLoading, isError, error, refetch } = useQuery(
     `hasilDeteksiSakit${id}`,
     async () => {
       const value = await AsyncStorage.getItem('@data/user');
       const responseData = await fetchData(value, id);
-  
-      // Meminta izin lokasi
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        throw new Error("Permission to access location was denied");
-      }
-  
-      // Mendapatkan lokasi saat ini
-      let location = await Location.getCurrentPositionAsync({});
-      setLatitude(location.coords.latitude);
-      setLongtitude(location.coords.longitude);
-  
       return responseData;
     },
     {
-      // Menambahkan onSuccess callback untuk menangani state setelah data berhasil diambil
-      onSuccess: (data) => {
-        const targetAccuracy = data.akurasi; // Get accuracy from data
-        const duration = 1000; // 1 second
-        const intervalTime = 50; // Update every 50 milliseconds
-        const targetProgress = 1; // Target progress (1 = 100%)
-  
-        const step = targetProgress / (duration / intervalTime); // Progress step
-        const accuracyStep = targetAccuracy / (duration / intervalTime); // Accuracy step
-  
-        let currentAccuracy = 0;
-        let currentProgress = 0;
-        const interval = setInterval(() => {
-          currentAccuracy += accuracyStep;
-          currentProgress += step;
-          setProgress(data.akurasi / 100); // Ensure progress does not exceed the target
-          setDisplayedAccuracy(data.akurasi);
-          setDangerLevel(Number(data.bahaya));
-          if (currentProgress >= targetProgress) {
-            clearInterval(interval);
-          }
-        }, intervalTime);
-  
-        return () => clearInterval(interval); // Cleanup interval on component unmount
-      }
+      onSuccess: async (data) => {
+        setDangerLevel(Number(data.bahaya));
+        // Request location permission and get current location
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === "granted") {
+          let location = await Location.getCurrentPositionAsync({});
+          setLatitude(location.coords.latitude);
+          setLongitude(location.coords.longitude);
+        } else {
+          console.error("Permission to access location was denied");
+        }
+      },
+      onError: (error) => {
+        console.error("Error fetching data:", error);
+      },
     }
   );
 
-    if (isLoading) {
-      return (
-        <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-          <ActivityIndicator size={80} color="#609966" />
-        </View>
-      );
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
     }
+  }, [refetch]);
 
-    if (isError) {
-      return (
-        <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-          <Text>Error: {error.message}</Text>
-        </View>
-      );
-    }
-    
-//   useEffect(() => {
-//   if (data) { // Ensure data is defined before proceeding
-//     (async () => {
-//       let { status } = await Location.requestForegroundPermissionsAsync();
-//       if (status !== "granted") {
-//         setErrorMsg("Permission to access location was denied");
-//         return;
-//       }
+  if (isLoading) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <ActivityIndicator size={80} color="#609966" />
+      </View>
+    );
+  }
 
-//       let location = await Location.getCurrentPositionAsync({});
-//       setLatitude(location.coords.latitude);
-//       setLongtitude(location.coords.longitude);
-//     })();
+  if (isError) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
 
-//     const duration = 1000; // 1 second
-//     const intervalTime = 50; // Update every 50 milliseconds
-//     const targetProgress = 1; // Target progress (1 = 100%)
-//     const targetAccuracy = data.akurasi; // Get accuracy from data
-
-//     const step = targetProgress / (duration / intervalTime); // Progress step
-//     const accuracyStep = targetAccuracy / (duration / intervalTime); // Accuracy step
-
-//     let currentAccuracy = 0;
-//     let currentProgress = 0;
-//     const interval = setInterval(() => {
-//       currentAccuracy += accuracyStep;
-//       currentProgress += step;
-//       setProgress(data.akurasi / 100); // Ensure progress does not exceed the target
-//       setDisplayedAccuracy(data.akurasi);
-//       setDangerLevel(Number(data.bahaya));
-//       if (currentProgress >= targetProgress) {
-//         clearInterval(interval);
-//       }
-//     }, intervalTime);
-
-//     return () => clearInterval(interval);
-//   }
-// }, [data]); // Add data as a dependency
-
-  // Function to open Google Maps
   const openGoogleMaps = () => {
     const url = `https://www.google.com/maps/search/klinik+hewan/@${latitude},${longitude},14z/data=!3m1!4b1?entry=ttu`;
-    setWebViewKey(webViewKey + 1); // Change key to force reload
     Linking.openURL(url);
   };
 
   const openRute = (err) => {
     const url = extractUrlFromIntent(err.nativeEvent.url);
-    setWebViewKey(webViewKey + 1);
     Linking.openURL(url);
+  };
+
+  const handlerNavigate = () => {
+    navigation.navigate("KlinikList-screen");
   };
 
   return (
     <SafeAreaView
       style={{
-        // Paddings to handle safe area
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
@@ -192,19 +127,29 @@ export default HasilDeteksiSakit = (props) => {
       <View className="w-[95%] mt-10">
         <TopTitleMenu title={data.penyakit} />
 
-        <ScrollView className="h-[80%]">
+        <ScrollView 
+          className="h-[80%]"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#609966"]}
+              tintColor="#609966"
+            />
+          }
+        >
           <View
             style={[styles.shadow]}
             className="w-full aspect-square rounded-lg"
           >
             <Image
-              source={{ uri: photo }}
+              source={{ uri: data.link }}
               className="w-full aspect-square rounded-lg"
             />
           </View>
           <View className="flex-1 mt-5 justify-center">
             <Text className="ml-1 text-lg font-semibold leading-7 tracking-widest text-[#40513B] mb-1">
-              Akurasi: {displayedAccuracy}%
+              Akurasi: {data?.akurasi}%
             </Text>
             <Bar
               width={screenWidth * 0.95}
@@ -212,7 +157,7 @@ export default HasilDeteksiSakit = (props) => {
               unfilledColor="#fff"
               height={8}
               useNativeDriver={true}
-              progress={progress}
+              progress={data?.akurasi / 100}
               borderRadius={5}
             />
             <Text className="ml-1 text-lg font-semibold leading-7 tracking-widest text-[#40513B] mt-5 mb-1">
@@ -221,11 +166,10 @@ export default HasilDeteksiSakit = (props) => {
             <Bar
               width={screenWidth * 0.95}
               color={getDangerColor(dangerLevel)}
-              // color={"green"}
               unfilledColor="#fff"
               height={8}
               borderRadius={5}
-              progress={dangerLevel/3} // Normalize the progress for danger level (1-3)
+              progress={dangerLevel / 3}
             />
           </View>
 
@@ -249,7 +193,6 @@ export default HasilDeteksiSakit = (props) => {
               style={[styles.shadow]}
             >
               <WebView
-                key={webViewKey}
                 originWhitelist={["*"]}
                 source={{
                   uri: `https://www.google.com/maps/search/klinik+hewan/@${latitude},${longitude},14z/data=!3m1!4b1?entry=ttu`,
@@ -279,7 +222,7 @@ export default HasilDeteksiSakit = (props) => {
               Klinik Terdekat
             </Text>
             {data.klinik && data.klinik.map((data, index) => {
-              return <SakitKlinikLengkap data={data} index={index} />;
+              return <SakitKlinikLengkap key={data.id || `klinik-${index}`} data={data} index={index} />;
             })}
 
             <TouchableWithoutFeedback className="w-full" onPress={handlerNavigate}>
@@ -293,3 +236,5 @@ export default HasilDeteksiSakit = (props) => {
     </SafeAreaView>
   );
 };
+
+export default HasilDeteksiSakit;

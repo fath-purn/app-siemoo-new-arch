@@ -1,32 +1,23 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
+import axios from "axios";
 import React, { useState } from "react";
 import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Image,
-  Text,
-  Linking,
   ActivityIndicator,
-  TextInput,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
+  Image,
+  Linking,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import TopTitleMenu from "../../components/TopTitleMenu";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Dropdown } from "react-native-element-dropdown";
-import { styles, extractUrlFromIntent } from "../../utils/global.utils";
-import clsx from "clsx";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import SakitKlinikLengkap from "../../components/SakitKlinikLengkap";
-import { useRoute } from "@react-navigation/native";
 import { WebView } from "react-native-webview";
+import { useQuery } from "react-query";
+import TopTitleMenu from "../../components/TopTitleMenu";
+import { extractUrlFromIntent, styles } from "../../utils/global.utils";
 
 const fetchData = async (value, id) => {
   const headers = {
@@ -42,12 +33,13 @@ const fetchData = async (value, id) => {
 };
 
 export default KlinikDeskripsi = () => {
+  const [refreshing, setRefreshing] = useState(false);
   const insets = useSafeAreaInsets();
   const [webViewKey, setWebViewKey] = useState(0);
   const route = useRoute();
   const { id } = route.params;
 
-  const {data, isLoading, isError, error} = useQuery(
+  const {data, isLoading, isError, error, refetch} = useQuery(
     `klinikDeskripsi`,
     async () => {
       const value = await AsyncStorage.getItem('@data/user');
@@ -56,6 +48,21 @@ export default KlinikDeskripsi = () => {
       return responseData;
     },
   );
+
+  const openRute = (err) => {
+    const url = extractUrlFromIntent(err.nativeEvent.url);
+    setWebViewKey(webViewKey + 1);
+    Linking.openURL(url);
+  };
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetch]);
 
 
   if (isLoading) {
@@ -74,11 +81,7 @@ export default KlinikDeskripsi = () => {
     );
   }
 
-  const openRute = (err) => {
-    const url = extractUrlFromIntent(err.nativeEvent.url);
-    setWebViewKey(webViewKey + 1);
-    Linking.openURL(url);
-  };
+  
 
   return (
     <SafeAreaView
@@ -94,7 +97,17 @@ export default KlinikDeskripsi = () => {
       <View className="w-[95%] mt-10">
         <TopTitleMenu title={data.nama} />
 
-        <ScrollView className="flex-auto h-[80%]">
+        <ScrollView 
+          className="h-[80%]"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#609966"]}
+              tintColor="#609966"
+            />
+          }
+        >
           <View
             style={[styles.shadow]}
             className="w-full aspect-square rounded-lg"

@@ -1,26 +1,23 @@
-import React from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import React, { useState } from "react";
 import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Text,
   ActivityIndicator,
-  Image,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
   TouchableOpacity,
-  StyleSheet,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import UjiLabHome from "../components/UjiLabHome";
-import TopTitleMenu from "../components/TopTitleMenu";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "react-query";
-import axios from "axios";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { AnimatedCircularProgress } from "react-native-circular-progress";
 import SakitBanner from "../components/SakitBanner";
 import SakitUpload from "../components/SakitUpload";
+import TopTitleMenu from "../components/TopTitleMenu";
 import { styles } from "../utils/global.utils";
-import { useNavigation } from "@react-navigation/native";
 
 const fetchData = async (value) => {
   const headers = {
@@ -35,6 +32,7 @@ const fetchData = async (value) => {
 };
 
 export default DeteksiSakit = () => {
+  const [refreshing, setRefreshing] = useState(false);
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
@@ -42,7 +40,7 @@ export default DeteksiSakit = () => {
     navigation.navigate(tujuan);
   };
 
-    const {data, isLoading, isError, error} = useQuery(
+    const {data, isLoading, isError, error, refetch} = useQuery(
       'deteksiLast',
       async () => {
         const value = await AsyncStorage.getItem('@data/user');
@@ -51,6 +49,21 @@ export default DeteksiSakit = () => {
         return responseData;
       },
     );
+
+    const openRute = (err) => {
+      const url = extractUrlFromIntent(err.nativeEvent.url);
+      setWebViewKey(webViewKey + 1);
+      Linking.openURL(url);
+    };
+  
+    const onRefresh = React.useCallback(async () => {
+      setRefreshing(true);
+      try {
+        await refetch();
+      } finally {
+        setRefreshing(false);
+      }
+    }, [refetch]);
 
     if (isLoading) {
       return (
@@ -84,7 +97,17 @@ export default DeteksiSakit = () => {
 
         <SakitUpload />
 
-        <ScrollView className="h-[80%]">
+        <ScrollView 
+          className="h-[80%]"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#609966"]}
+              tintColor="#609966"
+            />
+          }
+        >
           <View className="flex items-center justify-center mt-[10%]">
             {/* penyakit */}
             <SakitBanner sakit={data} />
