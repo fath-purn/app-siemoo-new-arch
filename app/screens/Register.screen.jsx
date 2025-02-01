@@ -1,30 +1,27 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Image,
-  TextInput,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  ActivityIndicator,
-  Platform,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useState, useContext} from 'react';
-import {Link} from '@react-navigation/native';
-import clsx from 'clsx';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Dropdown} from 'react-native-element-dropdown';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { AuthContext } from '../../Authorize/AuthProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useQuery} from 'react-query';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import clsx from 'clsx';
+import { useState } from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from 'react-query';
 import { styles } from '../utils/global.utils';
 
 // image
@@ -46,8 +43,8 @@ const fetchData = async value => {
   return response.data.data;
 };
 
-export default RegisterInputScreen = ({navigation}) => {
-  const { registerLoginAuth } = useContext(AuthContext);
+export default function Register() {
+  Register.displayName = 'Register';
   const insets = useSafeAreaInsets();
   const [email, setEmail] = useState('');
   const [fullname, setFullname] = useState('');
@@ -64,8 +61,9 @@ export default RegisterInputScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [messageError, setMessageError] = useState('Register Anda Gagal');
   const [loading, setLoading] = useState(false);
-
   const [isFocus, setIsFocus] = useState(false);
+  const navigation = useNavigation();
+
 
   // panggil data kelompok tani dari API
   const {data, isLoading, isError, error} = useQuery(
@@ -502,11 +500,11 @@ export default RegisterInputScreen = ({navigation}) => {
                   <Text className="text-[#609966] text-[16px] leading-[15.5px] ">
                     Sudah punya akun?
                   </Text>
-                  <Link to="/Login-screen">
+                  <TouchableOpacity onPress={() => navigation.navigate('Login-screen')}>
                     <Text className="text-[#40513B] text-[16px] leading-[15.5px]  ml-2">
                       Login
                     </Text>
-                  </Link>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

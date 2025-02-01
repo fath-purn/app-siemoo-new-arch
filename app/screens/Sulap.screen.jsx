@@ -1,17 +1,18 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import React from 'react';
 import {
-  View,
-  ScrollView,
-  SafeAreaView,
   ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
 } from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import TopTitleMenu from '../components/TopTitleMenu';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from 'react-query';
 import ArtikelDaftar from '../components/ArtikelDaftar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useQuery} from 'react-query';
-import axios from 'axios';
 import ErrorHandler from '../components/ErrorHandler';
+import TopTitleMenu from '../components/TopTitleMenu';
 
 const fetchData = async value => {
   const headers = {
@@ -26,7 +27,8 @@ const fetchData = async value => {
   return response.data.data;
 };
 
-export default Sulap = () => {
+export default function Sulap() {
+  Sulap.displayName = 'Sulap';
   const insets = useSafeAreaInsets();
 
   const {data, isLoading, isError, error} = useQuery(

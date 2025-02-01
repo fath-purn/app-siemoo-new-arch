@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { styles } from "../utils/global.utils";
-import { useNavigation } from "@react-navigation/native";
 
-export default SakitBanner = ({ sakit, index }) => {
+export default function SakitBanner({ sakit, index }) {
+  SakitBanner.displayName = 'SakitBanner';
   const navigation = useNavigation();
 
   const handlerNavigate = (id) => {
     navigation.navigate("HasilDeteksiSakit-screen", { id: id });
   };
+
 
   return (
     <TouchableOpacity

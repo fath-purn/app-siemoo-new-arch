@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Link, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import { useContext, useState } from "react";
 import {
@@ -56,6 +56,10 @@ function Home() {
         setIsLoading(false);
       }
     }
+  };
+
+  const handlerNavigate = (tujuan) => {
+    navigation.navigate(tujuan);
   };
 
   return (
@@ -156,11 +160,11 @@ function Home() {
                 <Text className="text-[#609966] text-[16px] leading-[15.5px] ">
                   Belum punya akun?
                 </Text>
-                <Link to="/Register-screen">
+                <TouchableOpacity onPress={() => handlerNavigate("Register-screen")}>
                   <Text className="text-[#40513B] text-[16px] leading-[15.5px]  ml-2">
                     Daftar
                   </Text>
-                </Link>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

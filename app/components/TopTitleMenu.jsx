@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../utils/global.utils";
 
-export default TopTitleMenu = ({ title }) => {
+export default function TopTitleMenu({ title }) {
+  TopTitleMenu.displayName = 'TopTitleMenu';
   const navigation = useNavigation();
   return (
     <>

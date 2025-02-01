@@ -27,7 +27,8 @@ const fetchData = async (value) => {
   return response.data.data;
 };
 
-export default BeriPakan = () => {
+export default function BeriPakan() {
+  BeriPakan.displayName = 'BeriPakan';
   const insets = useSafeAreaInsets();
 
   const { data, isLoading, isError, error } = useQuery(

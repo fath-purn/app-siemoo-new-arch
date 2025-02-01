@@ -1,7 +1,8 @@
-import {View, Text, ScrollView} from 'react-native';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ScrollView, Text, View } from 'react-native';
 
-export default ErrorHandler = () => {
+export default function ErrorHandler() {
+  ErrorHandler.displayName = 'ErrorHandler';
   return (
     <ScrollView className="h-[80%] ">
       <View className="flex items-center justify-center mt-[10%]">

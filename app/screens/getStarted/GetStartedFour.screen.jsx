@@ -1,9 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {View, SafeAreaView, Text, Image, TouchableOpacity} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default GetThree = () => {
+export default function GetThree() {
+  GetThree.displayName = 'GetThree';
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 

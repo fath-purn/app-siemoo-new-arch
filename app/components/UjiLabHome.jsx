@@ -3,7 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from '../utils/global.utils';
 
-export default UjiLabHome = ({data, home, index}) => {
+export default function UjiLabHome({data, home, index}) {
+  UjiLabHome.displayName = 'UjiLabHome';
   const navigation = useNavigation();
 
   const handlerNavigate = () => {

@@ -1,18 +1,18 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import React from 'react';
 import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  Text,
   ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
 } from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import TopTitleMenu from '../components/TopTitleMenu';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from 'react-query';
 import CardLapak from '../components/CardLapak';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useQuery} from 'react-query';
-import axios from 'axios';
 import ErrorHandler from '../components/ErrorHandler';
+import TopTitleMenu from '../components/TopTitleMenu';
 
 const fetchData = async value => {
   const headers = {
@@ -27,7 +27,8 @@ const fetchData = async value => {
   return response.data.data;
 };
 
-export default Lapak = () => {
+export default function Lapak() {
+  Lapak.displayName = 'Lapak';
   const insets = useSafeAreaInsets();
 
   const {data, isLoading, isError, error} = useQuery(

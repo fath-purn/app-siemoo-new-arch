@@ -28,7 +28,8 @@ const fetchData = async (value) => {
   return response.data.data;
 };
 
-export default Riwayat = () => {
+export default function Riwayat() {
+  Riwayat.displayName = 'Riwayat';
   const insets = useSafeAreaInsets();
   const [refreshing, setRefreshing] = useState(false);
 

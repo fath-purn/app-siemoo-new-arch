@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../utils/global.utils";
 
-export default SakitUpload = (props) => {
+export default function SakitUpload(props) {
+  SakitUpload.displayName = 'SakitUpload';
   const navigation = useNavigation();
 
   const handlerNavigate = (tujuan) => {

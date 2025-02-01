@@ -6,7 +6,8 @@ import {
 
 import ItemArticle from './ItemArticle';
 
-export default ArticleCarousel = ({data}) => {
+export default function ArticleCarousel({data}) {
+  ArticleCarousel.displayName = 'ArticleCarousel';
   return (
     <View className="">
       <ScrollView showsVerticalScrollIndicator={false}>

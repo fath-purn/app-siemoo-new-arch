@@ -64,7 +64,8 @@ const fetchDataKota = async (value) => {
 };
 
 // Main component
-export default KlinikList = () => {
+export default function KlinikList() {
+  KlinikList.displayName = 'KlinikList';
   const insets = useSafeAreaInsets();
   const [text, setText] = useState("");
   const [kota, setKota] = useState([]);

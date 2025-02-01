@@ -32,7 +32,8 @@ const fetchData = async (value, id) => {
   return response.data.data;
 };
 
-export default KlinikDeskripsi = () => {
+export default function KlinikDeskripsi() {
+  KlinikDeskripsi.displayName = 'KlinikDeskripsi';
   const [refreshing, setRefreshing] = useState(false);
   const insets = useSafeAreaInsets();
   const [webViewKey, setWebViewKey] = useState(0);

@@ -100,11 +100,6 @@ const HasilDeteksiSakit = (props) => {
     );
   }
 
-  const openGoogleMaps = () => {
-    const url = `https://www.google.com/maps/search/klinik+hewan/@${latitude},${longitude},14z/data=!3m1!4b1?entry=ttu`;
-    Linking.openURL(url);
-  };
-
   const openRute = (err) => {
     const url = extractUrlFromIntent(err.nativeEvent.url);
     Linking.openURL(url);

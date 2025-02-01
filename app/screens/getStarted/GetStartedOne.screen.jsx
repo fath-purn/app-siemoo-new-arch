@@ -1,15 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {View, SafeAreaView, Text, Image, TouchableOpacity} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default GetOne = () => {
+export default function GetOne() {
+  GetOne.displayName = 'GetOne';
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-
-  const handleNext = () => {
-    navigation.navigate('GetStartedTwoScreen-screen');
-  };
 
   return (
     <SafeAreaView

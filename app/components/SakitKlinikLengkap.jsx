@@ -1,9 +1,10 @@
-import { View, Text, TouchableHighlight } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Text, TouchableHighlight, View } from "react-native";
 import { styles } from "../utils/global.utils";
 
-export default SakitKlinikLengkap = ({data, index}) => {
+export default function SakitKlinikLengkap({data, index}) {
+  SakitKlinikLengkap.displayName = 'SakitKlinikLengkap';
   const navigation = useNavigation();
 
   const handlerNavigate = (id) => {

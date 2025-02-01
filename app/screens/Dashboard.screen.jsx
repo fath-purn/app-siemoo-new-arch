@@ -1,23 +1,23 @@
-import {useContext, useEffect, useState} from 'react';
-import {
-  Image,
-  Text,
-  View,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-import { AuthContext } from '../../Authorize/AuthProvider';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useQuery } from "react-query";
 import axios from "axios";
+import { useContext, } from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from "react-query";
+import { AuthContext } from '../../Authorize/AuthProvider';
 
 import ArtikelCarousel from '../components/ArticleCarousel';
-import UjiLabHome from '../components/UjiLabHome';
 import MenuHome from '../components/MenuHome';
+import UjiLabHome from '../components/UjiLabHome';
 
 const menuKiri = [
   {

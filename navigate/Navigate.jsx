@@ -1,9 +1,15 @@
+// Third party imports
 import { useIsFocused } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useContext } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
-const Stack = createNativeStackNavigator();
+// Screen imports
+import AmbilGambar from "../app/screens/DeteksiSakit/AmbilGambar.screen";
+import HasilDeteksiSakit from "../app/screens/DeteksiSakit/HasilDeteksiSakit.screen";
+import KlinikList from "../app/screens/DeteksiSakit/KlinikList.screen";
+import Login from "../app/screens/Login.screen";
+import Register from "../app/screens/Register.screen";
 
 // auth
 import { AuthContext } from '../Authorize/AuthProvider';
@@ -11,23 +17,20 @@ import { AuthContext } from '../Authorize/AuthProvider';
 // screen
 import BeriPakanScreen from '../app/screens/BeriPakan.screen';
 import Dashboard from '../app/screens/Dashboard.screen';
+import ArtikelScreen from '../app/screens/DeteksiSakit/Artikel.screen';
+import KlinikDeskripsiScreen from '../app/screens/DeteksiSakit/KlinikDeskripsi.screen';
+import RiwayatScreen from '../app/screens/DeteksiSakit/Riwayat.screen';
 import EdukasiScreen from '../app/screens/Edukasi.screen';
 import Lab from '../app/screens/Lab.screen';
 import Lapak from '../app/screens/Lapak.screen';
-import Login from '../app/screens/Login.screen';
 import OlahPanganScreen from '../app/screens/OlahPangan.screen';
-import Register from '../app/screens/Register.screen';
 import DeteksiSaKitScreen from '../app/screens/Sakit.screen';
 import SulapScreen from '../app/screens/Sulap.screen';
 
-import AmbilGambarScreen from '../app/screens/DeteksiSakit/AmbilGambar.screen';
-import ArtikelScreen from '../app/screens/DeteksiSakit/Artikel.screen';
-import HasilDeteksiSakitScreen from '../app/screens/DeteksiSakit/HasilDeteksiSakit.screen';
-import KlinikDeskripsiScreen from '../app/screens/DeteksiSakit/KlinikDeskripsi.screen';
-import KlinikListScreen from '../app/screens/DeteksiSakit/KlinikList.screen';
-import RiwayatScreen from '../app/screens/DeteksiSakit/Riwayat.screen';
+const Stack = createNativeStackNavigator();
 
-export default Navigate = () => {
+export default function Navigate() {
+  Navigate.displayName = 'Navigate';
   const {userToken, isLoading} = useContext(AuthContext);
   const isFocused = useIsFocused();
 
@@ -74,15 +77,15 @@ export default Navigate = () => {
         />
         <Stack.Screen
           name="AmbilGambar-screen"
-          component={AmbilGambarScreen}
+          component={AmbilGambar}
         />
         <Stack.Screen
           name="HasilDeteksiSakit-screen"
-          component={HasilDeteksiSakitScreen}
+          component={HasilDeteksiSakit}
         />
         <Stack.Screen
           name="KlinikList-screen"
-          component={KlinikListScreen}
+          component={KlinikList}
         />
         <Stack.Screen
           name="KlinikDeskripsi-screen"

@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import { styles } from '../utils/global.utils';
 
-export default LapakCard = ({data, index}) => {
+export default function LapakCard({data, index}) {
+  LapakCard.displayName = 'LapakCard';
   const {no_wa} = data.user;
 
   // Remove the '+' character if it exists

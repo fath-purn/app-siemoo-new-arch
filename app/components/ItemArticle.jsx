@@ -3,7 +3,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../utils/global.utils";
 
-export default ItemArticle = ({ item, data, index }) => {
+export default function ItemArticle({ item, data, index }) {
+  ItemArticle.displayName = 'ItemArticle';
   const navigation = useNavigation();
 
   const handlePress = (menu) => {

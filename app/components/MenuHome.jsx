@@ -3,7 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from '../utils/global.utils';
 
-export default MenuHome = ({menuKanan, menuKiri}) => {
+export default function MenuHome({menuKanan, menuKiri}) {
+  MenuHome.displayName = 'MenuHome';
   const navigation = useNavigation();
 
   const handlerNavigate = tujuan => {

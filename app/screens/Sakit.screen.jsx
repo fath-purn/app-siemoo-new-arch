@@ -10,7 +10,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
@@ -31,55 +31,50 @@ const fetchData = async (value) => {
   return response.data.data;
 };
 
-export default DeteksiSakit = () => {
-  const [refreshing, setRefreshing] = useState(false);
+export default function DeteksiSakit() {
+  DeteksiSakit.displayName = 'DeteksiSakit';
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
 
   const handlerNavigate = (tujuan) => {
     navigation.navigate(tujuan);
   };
 
-    const {data, isLoading, isError, error, refetch} = useQuery(
-      'deteksiLast',
-      async () => {
-        const value = await AsyncStorage.getItem('@data/user');
-        const responseData = await fetchData(value);
+  const { data, isLoading, isError, error, refetch } = useQuery(
+    'deteksiLast',
+    async () => {
+      const value = await AsyncStorage.getItem('@data/user');
+      const responseData = await fetchData(value);
 
-        return responseData;
-      },
+      return responseData;
+    },
+  );
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetch]);
+
+  if (isLoading) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <ActivityIndicator size={80} color="#609966" />
+      </View>
     );
+  }
 
-    const openRute = (err) => {
-      const url = extractUrlFromIntent(err.nativeEvent.url);
-      setWebViewKey(webViewKey + 1);
-      Linking.openURL(url);
-    };
-  
-    const onRefresh = React.useCallback(async () => {
-      setRefreshing(true);
-      try {
-        await refetch();
-      } finally {
-        setRefreshing(false);
-      }
-    }, [refetch]);
-
-    if (isLoading) {
-      return (
-        <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-          <ActivityIndicator size={80} color="#609966" />
-        </View>
-      );
-    }
-
-    if (isError) {
-      return (
-        <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-          <Text>Error: {error.message}</Text>
-        </View>
-      );
-    }
+  if (isError) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView
@@ -167,20 +162,20 @@ export default DeteksiSakit = () => {
                 </TouchableOpacity>
               </View>
               {/* Riwayat */}
-              <View className="min-w-[45%] max-w-[48%] ml-2">
+              {/* <View className="min-w-[45%] max-w-[48%] ml-2">
                 <TouchableOpacity
                   className="bg-white rounded-xl w-full aspect-square flex items-center justify-center"
                   style={[styles.shadow]}
                   onPress={() => handlerNavigate("sd")}
                 >
-                  {/* <MaterialCommunityIcons
+                  <MaterialCommunityIcons
                     name={"clock-outline"}
                     size={60}
                     color="#166534"
                   />
-                  <Text className="text-2xl font-semibold leading-7 tracking-widest text-[#40513B]">Riwayat</Text> */}
+                  <Text className="text-2xl font-semibold leading-7 tracking-widest text-[#40513B]">Riwayat</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
           <View className="pb-[100px]"></View>
