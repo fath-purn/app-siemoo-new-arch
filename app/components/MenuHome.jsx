@@ -13,7 +13,6 @@ export default function MenuHome({menuKanan, menuKiri}) {
 
   return (
     <View className="my-5 flex-row justify-center w-full gap-3">
-    {/* <View className=" flex-row justify-between w-full my-5"> */}
       <View className="max-w-[50%] min-w-[48%] min gap-2">
         {menuKiri.map((item, index) => (
           <TouchableOpacity
@@ -21,7 +20,7 @@ export default function MenuHome({menuKanan, menuKiri}) {
             className="rounded-lg mb-1 bg-white flex items-center"
             style={[styles.shadow]}
             onPress={() => handlerNavigate(item.navigate)}>
-            <View className="w-[90%] my-5 flex-row items-center space-x-2">
+            <View className="w-[90%] my-5 flex-row items-center gap-2">
               <MaterialCommunityIcons
                 name={item.icon}
                 size={30}
@@ -39,7 +38,7 @@ export default function MenuHome({menuKanan, menuKiri}) {
             className="rounded-lg mb-1 bg-white flex items-center"
             style={[styles.shadow]}
             onPress={() => handlerNavigate(item.navigate)}>
-            <View className="w-[90%] my-5 flex-row items-center space-x-2">
+            <View className="w-[90%] my-5 flex-row items-center gap-2">
               <MaterialCommunityIcons
                 name={item.icon}
                 size={30}

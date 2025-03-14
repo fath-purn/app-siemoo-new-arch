@@ -3,13 +3,12 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import clsx from "clsx";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  RefreshControl,
   SafeAreaView,
   ScrollView,
   Text,
@@ -32,17 +31,18 @@ const fetchData = async (value, search, kota) => {
   };
 
   try {
-    let url = `https://siemoo.vercel.app/api/v1/klinik?search=${search}`;
-    if (kota !== "Semua") {
-      url += `&kota=${kota}`;
+    if (kota !== "Hapus") {
+      const response = await axios.get(
+        `https://siemoo.vercel.app/api/v1/klinik?search=${search}&kota=${
+          kota !== "Hapus"
+        }`,
+        { headers }
+      );
+      return response.data.data;
     }
-
-    const response = await axios.get(url, { headers });
-    return response.data.data;
-
   } catch (error) {
     console.error("Error fetching data:", error);
-    return [];
+    return undefined;
   }
 };
 
@@ -51,70 +51,68 @@ const fetchDataKota = async (value) => {
   const headers = {
     Authorization: `Bearer ${value}`,
   };
-  try {
-    const response = await axios.get(
-      "https://siemoo.vercel.app/api/v1/klinik/kota",
-      { headers }
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching kota:", error);
-    return [];
-  }
+
+  const response = await axios.get(
+    "https://siemoo.vercel.app/api/v1/klinik/kota",
+    { headers }
+  );
+
+  return response.data.data;
 };
 
 // Main component
 export default function KlinikList() {
-  KlinikList.displayName = 'KlinikList';
+  KlinikList.displayName = "KlinikList";
   const insets = useSafeAreaInsets();
-  const [text, setText] = useState("");
-  const [kota, setKota] = useState([]);
+  const [text, setText] = useState(""); // To store the user input
+  const [kota, setKota] = useState("");
   const [kotaSelect, setKotaSelect] = useState("");
   const [role, setRole] = useState("");
   const [isFocus, setIsFocus] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
 
-  const { data = [], isLoading, isError, error, refetch } = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     ["klinikList", searchText, kotaSelect],
     async () => {
       const value = await AsyncStorage.getItem("@data/user");
       return fetchData(value, searchText, kotaSelect);
-    },
-    {
-      initialData: [],
-      refetchOnMount: true,
-      retry: 2,
-      onError: (error) => {
-        console.error("Query error:", error);
-      },
     }
   );
 
+  // Fetch city data on component mount
   useEffect(() => {
-    const fetchKota = async () => {
+    async function fetchData() {
       const value = await AsyncStorage.getItem("@data/user");
       const responseDataKota = await fetchDataKota(value);
-      const dropdownData = [{ label: "Semua", value: 0 }, ...responseDataKota];
+
+      const dropdownData = [{ label: "Hapus", value: 0 }, ...responseDataKota];
       setKota(dropdownData);
-    };
-    fetchKota();
+    }
+    fetchData();
   }, []);
 
+  // Handler for performing the search when the search button is clicked
   const handleSearch = () => {
-    setSearchText(text);
+    setSearchText(text); // Set the text entered by the user as the search text
   };
 
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    try {
-      await refetch();
-    } finally {
-      setRefreshing(false);
-    }
-  }, [refetch]);
+  if (isLoading) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <ActivityIndicator size={80} color="#609966" />
+      </View>
+    );
+  }
 
-  const renderLabelRole = useMemo(() => {
+  if (isError) {
+    return (
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  const renderLabelRole = () => {
     if (role || isFocus) {
       return (
         <Text
@@ -137,23 +135,7 @@ export default function KlinikList() {
       );
     }
     return null;
-  }, [role, isFocus]);
-
-  if (isLoading) {
-    return (
-      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-        <ActivityIndicator size={80} color="#609966" />
-      </View>
-    );
-  }
-
-  if (isError) {
-    return (
-      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-        <Text>Error: {error.message}</Text>
-      </View>
-    );
-  }
+  };
 
   return (
     <SafeAreaView
@@ -168,17 +150,7 @@ export default function KlinikList() {
       <View className="w-[95%] mt-10">
         <TopTitleMenu title={"Klinik Hewan"} />
 
-        <ScrollView 
-          className="h-[80%]"
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={["#609966"]}
-              tintColor="#609966"
-            />
-          }
-        >
+        <ScrollView className="flex-auto h-[80%]">
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -187,8 +159,8 @@ export default function KlinikList() {
               <View className="border border-gray-600 flex-row justify-between rounded-full items-center">
                 <TextInput
                   placeholder="Search"
-                  onChangeText={setText}
-                  value={text}
+                  onChangeText={setText} // Update text immediately on change
+                  value={text} // Controlled input for user input
                   className="w-[70%] py-4 ml-8"
                   enterKeyHint="search"
                   onSubmitEditing={handleSearch}
@@ -211,7 +183,7 @@ export default function KlinikList() {
             </TouchableWithoutFeedback>
           </KeyboardAvoidingView>
           <View className="mt-3 mb-5">
-            {renderLabelRole}
+            {renderLabelRole()}
             <Dropdown
               className={clsx(
                 "h-[50px] border-[#9DC08B] border-[0.5px] rounded-lg px-2",
@@ -223,7 +195,7 @@ export default function KlinikList() {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
-              data={Array.isArray(kota) ? kota : []}
+              data={kota}
               search
               maxHeight={300}
               labelField="label"
@@ -234,10 +206,8 @@ export default function KlinikList() {
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
               onChange={(item) => {
-                if (item) {
-                  setKotaSelect(item.label);
-                  setIsFocus(false);
-                }
+                setKotaSelect(item.label);
+                setIsFocus(false);
               }}
               renderLeftIcon={() => (
                 <AntDesign
@@ -249,10 +219,10 @@ export default function KlinikList() {
               )}
             />
           </View>
-          {data.length > 0 ? (
-            data.map((item, index) => (
-              <SakitKlinikLengkap key={item.id || index} data={item} index={index} />
-            ))
+          {data ? (
+            data.map((data, index) => {
+              return <SakitKlinikLengkap data={data} index={index} />;
+            })
           ) : (
             <Text>Data tidak ditemukan</Text>
           )}
@@ -260,4 +230,4 @@ export default function KlinikList() {
       </View>
     </SafeAreaView>
   );
-};
+}

@@ -130,13 +130,6 @@ function Dashboard() {
                     color="#40513B"
                   />
                 </TouchableOpacity>
-                {/* <TouchableOpacity className="border-none" onPress={() => ''}>
-                  <MaterialCommunityIcons
-                    name={'menu'}
-                    size={30}
-                    color="black"
-                  />
-                </TouchableOpacity> */}
               </View>
               </View>
               <Text className="mt-5 text-2xl font-semibold text-[#40513B]">

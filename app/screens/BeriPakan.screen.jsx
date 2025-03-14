@@ -36,7 +36,6 @@ export default function BeriPakan() {
     async () => {
       const value = await AsyncStorage.getItem("@data/user");
       const responseData = await fetchData(value);
-      // console.log(responseData.pengujian, "asdfsa")
 
       return responseData;
     }

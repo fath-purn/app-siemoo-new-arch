@@ -52,7 +52,7 @@ function Home() {
         setIsLoading(false);
       } catch (error) {
         setModalVisible(true);
-        setMessageError(error.message.split(' ').slice(1).join(' '));
+        setMessageError('Error: ' + JSON.stringify(error.response.data.err, null, 2));
         setIsLoading(false);
       }
     }
