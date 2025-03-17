@@ -1,37 +1,55 @@
 {
   "expo": {
     "name": "Si-eMOO",
-    "slug": "app-siemoo-new-arch",
-    "version": "1.0.0",
+    "slug": "new-app-siemoo",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.fathpurn.appsiemoonewarch"
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.fathpurn.appsiemoonewarch"
+      "package": "com.fathpurn.appsiemoo"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash.png",
+          "image": "./assets/splash.png",
           "resizeMode": "contain",
           "backgroundColor": "#EDF1D6"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "custom photos permission",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
     ],
@@ -40,12 +58,12 @@
     },
     "extra": {
       "eas": {
-        "projectId": "ccf427e3-bafd-4c9a-b8e2-4d8e243e47ae"
+        "projectId": "79c1ec99-2e9d-41c8-b8e8-bc753db04463"
       }
     },
     "owner": "fathpurn",
     "updates": {
-      "url": "https://u.expo.dev/ccf427e3-bafd-4c9a-b8e2-4d8e243e47ae"
+      "url": "https://u.expo.dev/79c1ec99-2e9d-41c8-b8e8-bc753db04463"
     },
     "runtimeVersion": {
       "policy": "appVersion"
