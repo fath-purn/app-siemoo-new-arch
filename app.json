@@ -2,7 +2,7 @@
   "expo": {
     "name": "Si-eMOO",
     "slug": "new-app-siemoo",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "myapp",
@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.fathpurn.appsiemoo"
+      "package": "com.fathpurn.appsiemoov2"
     },
     "web": {
       "bundler": "metro",
