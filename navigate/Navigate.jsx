@@ -18,6 +18,7 @@ import { AuthContext } from '../Authorize/AuthProvider';
 import BeriPakanScreen from '../app/screens/BeriPakan.screen';
 import Dashboard from '../app/screens/Dashboard.screen';
 import ArtikelScreen from '../app/screens/DeteksiSakit/Artikel.screen';
+import ArtikelLengkapScreen from '../app/screens/DeteksiSakit/ArtikelLengkap.screen';
 import KlinikDeskripsiScreen from '../app/screens/DeteksiSakit/KlinikDeskripsi.screen';
 import RiwayatScreen from '../app/screens/DeteksiSakit/Riwayat.screen';
 import EdukasiScreen from '../app/screens/Edukasi.screen';
@@ -98,6 +99,10 @@ export default function Navigate() {
         <Stack.Screen
           name="Artikel-screen"
           component={ArtikelScreen}
+        />
+        <Stack.Screen
+          name="ArtikelLengkap-screen"
+          component={ArtikelLengkapScreen}
         />
       </Stack.Navigator>
     );
