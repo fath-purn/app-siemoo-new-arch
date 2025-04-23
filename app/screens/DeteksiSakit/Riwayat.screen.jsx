@@ -20,30 +20,29 @@ const fetchData = async (value) => {
     Authorization: `Bearer ${value}`,
   };
 
-  const response = await axios.get(
-    "https://siemoo.vercel.app/api/v1/deteksi",
-    { headers }
-  );
+  const response = await axios.get("https://siemoo.vercel.app/api/v1/deteksi", {
+    headers,
+  });
 
   return response.data.data;
 };
 
 export default function Riwayat() {
-  Riwayat.displayName = 'Riwayat';
+  Riwayat.displayName = "Riwayat";
   const insets = useSafeAreaInsets();
   const [refreshing, setRefreshing] = useState(false);
 
-    const {data, isLoading, isError, error, refetch} = useQuery(
-      'riwayatSakit',
-      async () => {
-        const value = await AsyncStorage.getItem('@data/user');
-        const responseData = await fetchData(value);
-        
-        return responseData;
-      },
-    );
+  const { data, isLoading, isError, error, refetch } = useQuery(
+    "riwayatSakit",
+    async () => {
+      const value = await AsyncStorage.getItem("@data/user");
+      const responseData = await fetchData(value);
 
-  const onRefresh = React.useCallback(async () => { 
+      return responseData;
+    }
+  );
+
+  const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     try {
       await refetch();
@@ -52,21 +51,13 @@ export default function Riwayat() {
     }
   }, [refetch]);
 
-  if (isLoading) {
+  if (isError) {
     return (
-        <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-          <ActivityIndicator size={80} color="#609966" />
-        </View>
-      );
-    }
-
-    if (isError) {
-      return (
-        <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-          <Text>Error: {error.message}</Text>
-        </View>
-      );
-    }
+      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView
@@ -85,7 +76,7 @@ export default function Riwayat() {
         {/* Upload Gambar */}
         <SakitUpload />
 
-        <ScrollView 
+        <ScrollView
           className="h-[80%] flex-auto"
           refreshControl={
             <RefreshControl
@@ -96,14 +87,34 @@ export default function Riwayat() {
             />
           }
         >
-          {data &&
-            data.map((data, index) => {
-              return <SakitBanner key={index} sakit={data} index={index} />;
-            })}
-        <View className="pb-[100px]"></View>
+          {isLoading ? (
+            // Loading state
+            <View className="w-full rounded-xl bg-white px-8 py-6 mb-4">
+              <ActivityIndicator size={80} color="#609966" />
+              <Text className="text-center mt-2 text-[#40513B]">
+                Memuat data...
+              </Text>
+            </View>
+          ) : data && data.length > 0 ? (
+            // Data exists - render list
+            data.map((item, index) => (
+              <SakitBanner
+                key={`${item.id || index}`}
+                sakit={item}
+                index={index}
+              />
+            ))
+          ) : (
+            // Empty state
+            <View className="w-full rounded-xl bg-white px-8 py-6 mb-4">
+              <Text className="text-xl font-semibold leading-7 tracking-wide text-[#40513B] text-center">
+                Silahkan unggah foto untuk menampilkan hasil deteksi penyakit.
+              </Text>
+            </View>
+          )}
+          <View className="pb-[100px]"></View>
         </ScrollView>
-
       </View>
     </SafeAreaView>
   );
-};
+}

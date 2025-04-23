@@ -20,19 +20,29 @@ import TopTitleMenu from "../components/TopTitleMenu";
 import { styles } from "../utils/global.utils";
 
 const fetchData = async (value) => {
-  const headers = {
-    Authorization: `Bearer ${value}`,
-  };
+  try {
+    const headers = {
+      Authorization: `Bearer ${value}`,
+    };
 
-  const response = await axios.get("https://siemoo.vercel.app/api/v1/deteksi/last", {
-    headers,
-  });
+    const response = await axios.get(
+      "https://siemoo.vercel.app/api/v1/deteksi/last",
+      {
+        headers,
+      }
+    );
 
-  return response.data.data;
+    return response.data.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response.data;
+    }
+    throw error;
+  }
 };
 
 export default function DeteksiSakit() {
-  DeteksiSakit.displayName = 'DeteksiSakit';
+  DeteksiSakit.displayName = "DeteksiSakit";
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
@@ -42,13 +52,13 @@ export default function DeteksiSakit() {
   };
 
   const { data, isLoading, isError, error, refetch } = useQuery(
-    'deteksiLast',
+    "deteksiLast",
     async () => {
-      const value = await AsyncStorage.getItem('@data/user');
+      const value = await AsyncStorage.getItem("@data/user");
       const responseData = await fetchData(value);
 
       return responseData;
-    },
+    }
   );
 
   const onRefresh = React.useCallback(async () => {
@@ -59,14 +69,6 @@ export default function DeteksiSakit() {
       setRefreshing(false);
     }
   }, [refetch]);
-
-  if (isLoading) {
-    return (
-      <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-        <ActivityIndicator size={80} color="#609966" />
-      </View>
-    );
-  }
 
   if (isError) {
     return (
@@ -92,7 +94,7 @@ export default function DeteksiSakit() {
 
         <SakitUpload />
 
-        <ScrollView 
+        <ScrollView
           className="h-[80%]"
           refreshControl={
             <RefreshControl
@@ -105,7 +107,23 @@ export default function DeteksiSakit() {
         >
           <View className="flex items-center justify-center mt-[10%]">
             {/* penyakit */}
-            <SakitBanner sakit={data} />
+            {isLoading ? (
+              // Full screen loading indicator
+              <View className="w-full rounded-xl bg-white px-8 py-6 mb-4">
+                <ActivityIndicator size={80} color="#609966" />
+              </View>
+            ) : data?.penyakit ? (
+              // Show data when available
+              <SakitBanner sakit={data} />
+            ) : (
+              // Show empty state when no data
+              <View className="w-full rounded-xl bg-white px-8 py-6 mb-4">
+                <Text className="text-xl font-semibold leading-7 tracking-wide text-[#40513B]">
+                  Silahkan unggah foto untuk menampilkan hasil deteksi penyakit.
+                </Text>
+              </View>
+            )}
+            {/* banner sakit */}
             {/* Menu bawah */}
             <View className="flex flex-row justify-between w-[100%]">
               {/* Klinik */}
@@ -183,4 +201,4 @@ export default function DeteksiSakit() {
       </View>
     </SafeAreaView>
   );
-};
+}

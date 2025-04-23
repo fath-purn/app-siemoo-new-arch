@@ -142,13 +142,13 @@ export default function KlinikDeskripsi() {
               />
             </View>
 
-            <View className="flex-row mt-5">
+            <View className="flex-row mt-5 w-full">
               <MaterialCommunityIcons
                 name={"map-marker-outline"}
                 size={35}
                 color="#166534"
               />
-              <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B] mb-1">
+              <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B] mb-1 w-[90%]">
                 {data.alamat}
               </Text>
             </View>
@@ -158,11 +158,11 @@ export default function KlinikDeskripsi() {
                 size={35}
                 color="#166534"
               />
-              <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B] mb-1">
+              <Text className="ml-1 text-base font-medium leading-7 tracking-widest text-[#40513B] mb-1 w-full">
                 {data.telepon}
               </Text>
             </View>
-            <View className="flex-row mt-3">
+            <View className="flex-row mt-3 w-full">
               <MaterialCommunityIcons
                 name={"clock-outline"}
                 size={35}

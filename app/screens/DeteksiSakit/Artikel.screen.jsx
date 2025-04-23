@@ -105,26 +105,32 @@ export default function Artikel() {
             />
           }
         >
-          {data && data.length > 0 ? (
-          data.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              onPress={() => handlerNavigate(item.id)}
-              className="flex mb-3 flex-row justify-between p-4 bg-white rounded-lg shadow-md"
-            >
-              <View className="flex items-center justify-center">
-                <Text className="font-semibold mb-2 text-xl">{item.judul}</Text>
-                {/* <Text>{item.description}</Text> */}
-              </View>
-              <Image
-                source={{ uri: item.gambar }}
-                className="h-[100px] w-[100px] aspect-square rounded-lg"
-              />
-            </TouchableOpacity>
-          ))
-        ) : (
-          <Text>Tidak ada data</Text>
-        )}
+          {isLoading ? (
+            <View className="flex items-center justify-center w-full h-full bg-[#EDF1D6]">
+              <ActivityIndicator size={80} color="#609966" />
+            </View>
+          ) : data && data.length > 0 ? (
+            data.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => handlerNavigate(item.id)}
+                className="flex mb-3 flex-row justify-between p-4 bg-white rounded-lg shadow-md"
+              >
+                <View className="flex justify-center w-[70%]">
+                  <Text className="font-semibold mb-2 text-xl" numberOfLines={2}>
+                    {item.judul}
+                  </Text>
+                  {/* <Text>{item.description}</Text> */}
+                </View>
+                <Image
+                  source={{ uri: item.gambar }}
+                  className="h-[100px] w-[100px] aspect-square rounded-lg"
+                />
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>Tidak ada data</Text>
+          )}
           <View className="pb-[100px]"></View>
         </ScrollView>
       </View>

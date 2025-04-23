@@ -93,7 +93,7 @@ function Dashboard() {
   if (isError) {
     return (
       <View className="flex items-center justify-center w-screen h-screen bg-[#EDF1D6]">
-        <Text>Error: {error.message}</Text>
+        <Text>Error: Jaringan internet diperlukan untuk mengakses aplikasi.</Text>
       </View>
     );
   }
