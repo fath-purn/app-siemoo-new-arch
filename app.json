@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.fathpurn.appsiemoov2"
+      "package": "com.fathpurn.appsiemoov3"
     },
     "web": {
       "bundler": "metro",
