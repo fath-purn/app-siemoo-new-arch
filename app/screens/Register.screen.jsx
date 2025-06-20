@@ -231,7 +231,7 @@ export default function Register() {
               <Image source={HomeLogo} className="h-[70px] w-[90%]" />
               <View className="w-[73%]">
                 <Text className="text-[#40513B] text-[36px] my-3 leading-[45px] ">
-                  Register
+                  Daftar
                 </Text>
 
                 {/* Input Email */}
@@ -470,7 +470,7 @@ export default function Register() {
                   disabled={loading}
                 >
                   <Text className="text-[#EDF1D6] text-[18px] leading-[22.5px] ">
-                    {loading ? "Loading..." : "Register"}
+                    {loading ? "Loading..." : "Daftar"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -485,7 +485,7 @@ export default function Register() {
                     onPress={() => navigation.navigate("Login-screen")}
                   >
                     <Text className="text-[#40513B] text-[16px] leading-[15.5px]  ml-2">
-                      Login
+                      Masuk
                     </Text>
                   </TouchableOpacity>
                 </View>

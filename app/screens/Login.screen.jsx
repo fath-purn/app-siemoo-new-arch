@@ -63,7 +63,6 @@ function Home() {
   };
 
   return (
-
     <SafeAreaView
       style={{
         // Paddings to handle safe area
@@ -87,7 +86,7 @@ function Home() {
             <Image source={HomeLogo} className="h-[70px] w-[90%] bottom-[10%]" />
             <View className="w-[73%] ">
               <Text className="text-[#40513B] text-[36px] my-3 leading-[45px] ">
-                Login
+                Masuk
               </Text>
 
               {/* Input Email dan Password */}
@@ -149,7 +148,7 @@ function Home() {
                 disabled={isLoading}
               >
                 <Text className="text-[#EDF1D6] text-[18px] leading-[22.5px] ">
-                  {isLoading ? "Loading..." : "Login"}
+                  {isLoading ? "Loading..." : "Masuk"}
                 </Text>
               </TouchableOpacity>
             </View>
