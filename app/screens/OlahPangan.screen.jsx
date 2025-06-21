@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useQuery } from "@tanstack/react-query";
 import axios from 'axios';
+import React from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView, Text, View, } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from 'react-query';
 import ErrorHandler from '../components/ErrorHandler';
 
 import ArtikelDaftar from '../components/ArtikelDaftar';

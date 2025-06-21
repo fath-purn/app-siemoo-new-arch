@@ -1,6 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext } from "react";
 import {
@@ -13,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useQuery, useQueryClient } from "react-query";
 import { AuthContext } from "../../Authorize/AuthProvider";
 
 import ArtikelCarousel from "../components/ArticleCarousel";
