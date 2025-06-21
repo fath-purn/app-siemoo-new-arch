@@ -80,10 +80,14 @@
           "@dev-plugins/react-query",
           "autoprefixer",
           "postcss",
-          "react-query"
+          "react-query",
+          "react-native-element-dropdown"
         ],
         "listUnknownPackages": false
       }
     }
+  },
+  "overrides": {
+    "@types/react": "~18.3.12"
   }
 }
