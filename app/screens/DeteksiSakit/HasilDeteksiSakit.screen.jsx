@@ -1,30 +1,30 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import * as Location from "expo-location";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  Linking,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableWithoutFeedback,
-  View,
+    ActivityIndicator,
+    Dimensions,
+    Image,
+    Linking,
+    RefreshControl,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    TouchableWithoutFeedback,
+    View,
 } from "react-native";
 import { Bar } from "react-native-progress";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
-import { useQuery } from "react-query";
 import SakitKlinikLengkap from "../../components/SakitKlinikLengkap";
 import TopTitleMenu from "../../components/TopTitleMenu";
 import {
-  extractUrlFromIntent,
-  getDangerColor,
-  styles,
+    extractUrlFromIntent,
+    getDangerColor,
+    styles,
 } from "../../utils/global.utils";
 
 const fetchData = async (value, id) => {
