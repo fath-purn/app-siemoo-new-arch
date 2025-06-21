@@ -7,20 +7,20 @@ import axios from "axios";
 import clsx from "clsx";
 import { useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "../utils/global.utils";
 
@@ -204,35 +204,15 @@ export default function Register() {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        // Paddings to handle safe area
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}
-      className="flex-[1] w-screen bg-[#EDF1D6]"
-    >
-      <KeyboardAwareScrollView>
-        {/* Notification error login */}
+     <SafeAreaView style={{ ...styles.safeArea, paddingTop: insets.top, paddingBottom: insets.bottom }} className="bg-[#EDF1D6]">
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
         {modalVisible && <ErrorNotification messageError={messageError} />}
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "position"} // Menghapus behavior pada Android
-          keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -300} // Mengatur offset berdasarkan platform
-        >
+        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View
-              className=" pt-10 pb-3 flex justify-center items-center"
-              style={{ flex: 1 }}
-            >
-              {/* Image Login Screen */}
-              <Image source={HomeLogo} className="h-[70px] w-[90%]" />
-              <View className="w-[73%]">
-                <Text className="text-[#40513B] text-[36px] my-3 leading-[45px] ">
-                  Daftar
-                </Text>
+            <View className="items-center py-10">
+              <Image source={HomeLogo} className="h-[70px] w-[90%] mb-3" resizeMode="contain" />
+              <View className="w-[80%]">
+                <Text className="text-[#40513B] text-4xl my-3">Daftar</Text>
 
                 {/* Input Email */}
                 <View className="flex flex-row items-center gap-3 ">
@@ -490,10 +470,10 @@ export default function Register() {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-      </KeyboardAwareScrollView>
+              </View>
+            </TouchableWithoutFeedback>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
