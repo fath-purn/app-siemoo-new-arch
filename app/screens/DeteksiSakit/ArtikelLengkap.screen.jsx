@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import React from "react";
 import { ActivityIndicator, Image, SafeAreaView, ScrollView, StyleSheet, Text, View, } from "react-native";
 import Markdown from "react-native-markdown-display";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useQuery } from "react-query";
 import TopTitleMenu from "../../components/TopTitleMenu";
 
 const fetchData = async (value, id) => {
