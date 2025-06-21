@@ -1,21 +1,21 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    Linking,
-    RefreshControl,
-    SafeAreaView,
-    ScrollView,
-    Text,
-    View
+  ActivityIndicator,
+  Image,
+  Linking,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
+import { useQuery } from "react-query";
 import TopTitleMenu from "../../components/TopTitleMenu";
 import { extractUrlFromIntent, styles } from "../../utils/global.utils";
 

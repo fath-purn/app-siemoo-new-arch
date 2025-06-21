@@ -2,7 +2,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import clsx from "clsx";
 import { useState } from "react";
@@ -22,6 +21,7 @@ import {
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useQuery } from "react-query";
 import { styles } from "../utils/global.utils";
 
 // image
